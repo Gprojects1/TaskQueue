@@ -2,9 +2,6 @@ package service
 
 import (
 	"fmt"
-	"log"
-	"math/rand"
-	"time"
 
 	"TaskQueue/internal/model"
 	"TaskQueue/internal/repository"
@@ -69,24 +66,4 @@ func (s *queueService) StartWorkers() {
 
 func (s *queueService) Shutdown() {
 	s.workerPool.Shutdown()
-}
-
-func processTask(task *model.Task) {
-	processingTime := time.Duration(100+rand.Intn(400)) * time.Millisecond
-	time.Sleep(processingTime)
-
-	if rand.Float64() < 0.2 {
-		retries := task.IncrementRetries()
-
-		if retries >= task.MaxRetries {
-			task.SetStatus("failed")
-			log.Printf("Task %s failed after %d retries", task.ID, retries)
-		} else {
-			task.SetStatus("queued")
-			log.Printf("Task %s failed, retry %d/%d", task.ID, retries, task.MaxRetries)
-		}
-	} else {
-		task.SetStatus("done")
-		log.Printf("Task %s completed successfully", task.ID)
-	}
 }

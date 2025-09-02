@@ -81,7 +81,7 @@ func (wp *workerPool) processTask(task *model.Task, workerID int) {
 		} else {
 			task.SetStatus("queued")
 			wp.taskRepo.Update(task)
-
+			//бэкофф
 			backoff := time.Duration(1<<uint(retries)) * time.Second
 			jitter := time.Duration(rand.Int63n(int64(backoff / 2)))
 			retryDelay := backoff + jitter
